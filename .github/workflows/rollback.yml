@@ -1,0 +1,42 @@
+name: Rollback Deployment
+
+# workflow_dispatch cho phép chúng ta kích hoạt pipeline này bằng tay 
+# và có giao diện để nhập tham số trên GitHub.
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Nhập Tag của phiên bản ổn định cần khôi phục (VD: abc1234)'
+        required: true
+        type: string
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Đăng nhập Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Kéo bản cũ và gắn mác (Re-tag) thành latest
+        run: |
+          # 1. Kéo phiên bản an toàn mà bạn vừa nhập về máy ảo của Github
+          docker pull ${{ secrets.DOCKER_USERNAME }}/mlops-lab3:${{ inputs.image_tag }}
+          
+          # 2. Đổi tên nó thành latest (ghi đè lên bản lỗi hiện tại)
+          docker tag ${{ secrets.DOCKER_USERNAME }}/mlops-lab3:${{ inputs.image_tag }} ${{ secrets.DOCKER_USERNAME }}/mlops-lab3:latest
+          
+          # 3. Đẩy lại lên Docker Hub
+          docker push ${{ secrets.DOCKER_USERNAME }}/mlops-lab3:latest
+
+      - name: Thông báo lệnh chạy trên Server (Giả lập CD)
+        run: |
+          echo "🚀 Đã cấu hình Docker Hub thành công. Bản 'latest' hiện tại chính là bản '${{ inputs.image_tag }}'."
+          echo "--- Lệnh để chạy trên Server Production ---"
+          echo "docker stop ml-api || true"
+          echo "docker rm ml-api || true"
+          echo "docker pull ${{ secrets.DOCKER_USERNAME }}/mlops-lab3:latest"
+          echo "docker run -d -p 8000:8000 --name ml-api ${{ secrets.DOCKER_USERNAME }}/mlops-lab3:latest"
+          
