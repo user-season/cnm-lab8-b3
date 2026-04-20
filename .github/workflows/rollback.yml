@@ -23,13 +23,13 @@ jobs:
       - name: Kéo bản cũ và gắn mác (Re-tag) thành latest
         run: |
           # 1. Kéo phiên bản an toàn mà bạn vừa nhập về máy ảo của Github
-          docker pull ${{ secrets.DOCKER_USERNAME }}/mlops-lab3:${{ inputs.image_tag }}
+          docker pull "${{ secrets.DOCKER_USERNAME }}/mlops-lab3:${{ inputs.image_tag }}"
           
           # 2. Đổi tên nó thành latest (ghi đè lên bản lỗi hiện tại)
-          docker tag ${{ secrets.DOCKER_USERNAME }}/mlops-lab3:${{ inputs.image_tag }} ${{ secrets.DOCKER_USERNAME }}/mlops-lab3:latest
-          
+          docker tag "${{ secrets.DOCKER_USERNAME }}/mlops-lab3:${{ inputs.image_tag }}" "${{ secrets.DOCKER_USERNAME }}/mlops-lab3:latest"
+
           # 3. Đẩy lại lên Docker Hub
-          docker push ${{ secrets.DOCKER_USERNAME }}/mlops-lab3:latest
+          docker push "${{ secrets.DOCKER_USERNAME }}/mlops-lab3:latest"
 
       - name: Thông báo lệnh chạy trên Server (Giả lập CD)
         run: |

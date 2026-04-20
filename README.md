@@ -62,3 +62,8 @@ python train_model.py
 
 Truy cập: http://localhost:8000/docs để xem giao diện Swagger UI và test API.
 
+
+
+Roll back
+![alt text](imgs/image.png)
+
