@@ -13,21 +13,36 @@ Tài khoản: 1 tài khoản GitHub (chứa code) và 1 tài khoản Docker Hub 
 
 
 2. Cấu trúc thư mục
+
+Mô tả nhanh cấu trúc dự án và ý nghĩa các tệp/thư mục chính:
+
+```
 .
 ├── .github/
 │   └── workflows/
-│       ├── ci_cd.yml        # Pipeline tự động Build, Test, Deploy
-│       └── rollback.yml     # Pipeline chạy thủ công để Rollback
+│       ├── ci_cd.yml        # CI/CD: build, test, deploy tự động
+│       └── rollback.yml     # Pipeline thủ công để rollback
 ├── app/
-│   ├── main.py              # API server (FastAPI)
-│   └── model_dummy.pkl      # File model (bạn tạo 1 file dummy hoặc copy model cũ vào)
+│   ├── main.py              # FastAPI server (entrypoint của API)
+│   └── model_dummy.pkl      # Ví dụ file model (hoặc copy model thật vào đây)
 ├── tests/
-│   ├── test_api.py          # Script kiểm thử API
-│   └── test_model.py        # Script kiểm thử chất lượng model
-├── Dockerfile               # File đóng gói hệ thống
-├── requirements.txt         # Các thư viện cần thiết
-└── README.md
+│   ├── test_api.py          # Unit/integration tests cho API
+│   └── test_model.py        # Tests cho logic/model
+├── Dockerfile               # Đóng gói ứng dụng vào container
+├── requirements.txt         # Danh sách dependencies (pip)
+└── README.md                # Tài liệu dự án (bạn đang đọc)
+```
 
+Ghi chú ngắn:
+- Thư mục `app/` chứa mã nguồn server và file model mẫu.
+- `tests/` chứa các kịch bản kiểm thử tự động (pytest).
+- `.github/workflows/` chứa các workflow CI/CD nếu bạn muốn tích hợp với GitHub Actions.
+
+## Train model
+
+```python
+python train_model.py
+```
 
 ## chạy thử (Local)
 
